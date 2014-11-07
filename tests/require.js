@@ -586,6 +586,71 @@ describe('Require specs:', function() {
             });
         });
     });
+    
+    describe('When we require *.js file with one waitFor option', function() {
+        beforeEach(function(done) {
+            module.require('/static/test.js', { key: 'test', waitFor: ['test2'] }, function() {
+                done();
+            });
+
+            jasmine.Ajax.requests.mostRecent().response({ status: 200, responseText: 'ok' });
+
+            module.require('/static/test.css', { key: 'test2' });
+
+            jasmine.Ajax.requests.mostRecent().response({ status: 200, responseText: 'ok' });
+        });
+
+        describe('Then resource', function() {
+            it('Should be append after required resource', function() {
+                expect(module.append.calls.argsFor(1)[0].tagName).toBe('SCRIPT');
+            });
+        });
+    });
+
+    describe('When we require *.js file with two waitFor option', function() {
+        beforeEach(function(done) {
+            module.require('/static/test.js', { key: 'test', waitFor: ['test2', 'test3'] }, function() {
+                done();
+            });
+
+            jasmine.Ajax.requests.mostRecent().response({ status: 200, responseText: 'ok' });
+
+            module.require('/static/test.css', { key: 'test2' });
+
+            jasmine.Ajax.requests.mostRecent().response({ status: 200, responseText: 'ok' });
+
+            module.require('/static/test.css', { key: 'test3' });
+
+            jasmine.Ajax.requests.mostRecent().response({ status: 200, responseText: 'ok' });
+        });
+
+        describe('Then resource', function() {
+            it('Should be append after required resources', function() {
+                expect(module.append.calls.argsFor(2)[0].tagName).toBe('SCRIPT');
+            });
+        });
+    });
+
+    describe('When we require *.js file with cross waitFor', function() {
+        var fn;
+
+        beforeEach(function() {
+            module.require('/static/test.css', { key: 'test', waitFor: ['test2'] });
+
+            jasmine.Ajax.requests.mostRecent().response({ status: 200, responseText: 'ok' });
+
+            fn = function() {
+                module.require('/static/test.css', { key: 'test2', waitFor: ['test'] });
+                jasmine.Ajax.requests.mostRecent().response({ status: 200, responseText: 'ok' });
+            };
+        });
+
+        describe('Then require method', function() {
+            it('Should throw error', function() {
+                expect(fn).toThrow();
+            });
+        });
+    });
 });
 
 

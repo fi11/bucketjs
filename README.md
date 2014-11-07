@@ -30,6 +30,7 @@ Accepts the following options:
  - {Boolean} defer - Add defer to script, default is false.
  - {Boolean} bottom - Append script to body, default is false.
  - {Boolean} link - Classic load as link for css and with src for script, default is false.
+ - {Array} waitFor - Append resource after resources from list.
 
 
 
