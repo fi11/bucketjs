@@ -651,6 +651,26 @@ describe('Require specs:', function() {
             });
         });
     });
+    
+    describe('When we require resource after dependence is already invoke', function() {
+        beforeEach(function(done) {
+            module.require('/static/test.css', { key: 'test2' });
+
+            jasmine.Ajax.requests.mostRecent().response({ status: 200, responseText: 'ok' });
+            
+            module.require('/static/test.js', { key: 'test', waitFor: ['test2'] }, function() {
+                done();
+            });
+
+            jasmine.Ajax.requests.mostRecent().response({ status: 200, responseText: 'ok' });
+        });
+
+        describe('Then resource', function() {
+            it('Should be append after required resources', function() {
+                expect(module.append.calls.argsFor(1)[0].tagName).toBe('SCRIPT');
+            });
+        });
+    });
 });
 
 

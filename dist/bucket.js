@@ -255,6 +255,7 @@ module.setItem = function(key, data, options) {
 var pendingBank = {};
 var pendingCounter = {};
 var invokeBank = {};
+var isResolved = {};
 
 module._waitFor = function(key, deps, fn) {
     if (!deps) return fn();
@@ -265,19 +266,25 @@ module._waitFor = function(key, deps, fn) {
     invokeBank[key] = fn;
 
     [].concat(deps).forEach(function(item) {
-        pendingCounter[key]++;
-        (pendingBank[item] || (pendingBank[item] = {}))[key] = true;
-
-        if (pendingBank[item][key] && pendingBank[key] && pendingBank[key][item]) {
+        if (pendingBank[key] && pendingBank[key][item]) {
             throw new Error('Circular dependency pair:', item, key);
         }
+
+        if (!isResolved[item]) {
+            pendingCounter[key]++;
+            (pendingBank[item] || (pendingBank[item] = {}))[key] = true;
+        }
     });
+
+    if (!pendingCounter[key]) fn();
 };
 
 module._resolve = function(key) {
     Object.keys(pendingBank[key] || {}).forEach(function(item) {
-        --pendingCounter[item] || invokeBank[item]();
+        if (pendingCounter[item]) --pendingCounter[item] || invokeBank[item]();
     }, this);
+
+    isResolved[key] = true;
 };
 
 
