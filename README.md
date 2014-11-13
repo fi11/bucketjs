@@ -8,18 +8,20 @@ $ npm install bucketjs
 On server:
 
 ```js
-    nodeJsServerResponse(200, '<html><head><script>' + require('bucketjs').src + '</script></head><body>OK</body></html>');
+var bucket = require('bucketjs');
+
+nodeJsServerResponse(200, '<html><head><script>' + bucket.src + '</script></head><body>OK</body></html>');
 ```
 
-On client js:
+On client:
 
 ```js
-    bucket.require('/static/fa284b8114ff6ecc5e73.js', { key: 'commons.js', version: 'fa284b8114ff6ecc5e73'});
+bucket.require('/static/fa284b8114ff6ecc5e73.js', { key: 'commons.js', version: 'fa284b8114ff6ecc5e73'});
 ```
 ## require Api
 
 ```js
-    bucket.require(resourceUrl, options, doneCallback);
+bucket.require(resourceUrl, options, doneCallback);
 ```
 Accepts the following options:
  - {String} key - Unique resource key, default is resource.
