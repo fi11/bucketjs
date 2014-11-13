@@ -652,7 +652,7 @@ describe('Require specs:', function() {
         });
     });
     
-    describe('When we require resource after dependence is already invoke', function() {
+    describe('When we require resource after required resources is already invoked', function() {
         beforeEach(function(done) {
             module.require('/static/test.css', { key: 'test2' });
 
