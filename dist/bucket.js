@@ -206,8 +206,8 @@ module.require = function require(url, optionsOrDone, done) {
         throw new Error('Bad options');
 
     function invoke(item, link) {
-        this.append(
-            this.createElement(item, { defer: options.defer, style: isCss, link: link }),
+        module.append(
+            module.createElement(item, { defer: options.defer, style: isCss, link: link }),
             options.bottom);
 
         done && done();
