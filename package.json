@@ -1,6 +1,6 @@
 {
   "name": "bucketjs",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "A script-loader that handles caching scripts in localStorage",
   "main": "index",
   "repository": {
