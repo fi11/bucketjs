@@ -11,8 +11,13 @@ var module = window['bucket'] = {};
  */
 module.append = function(elem, bottom) {
     var tag = bottom ? 'body' : 'head';
+    var node  =  document[tag] || document.getElementsByTagName(tag)[0];
 
-    (document[tag] || document.getElementsByTagName(tag)[0]).appendChild(elem);
+    if (bottom && !node) {
+        throw new Error('You should put your require script into body');
+    }
+
+    node.appendChild(elem);
 };
 
 module.collect = function() {
@@ -40,8 +45,9 @@ module.createElement = function(source, options) {
 
     var tag = 'script';
 
-    if (options.style)
+    if (options.style) {
         tag = options.link ? 'link' : 'style';
+    }
 
     var elem = document.createElement(tag);
 
@@ -258,10 +264,13 @@ var invokeBank = {};
 var isResolved = {};
 
 module._waitFor = function(key, deps, fn) {
-    if (!deps) return fn();
+    if (!deps) {
+        return fn();
+    }
 
-    if (pendingCounter[key] === undefined)
+    if (pendingCounter[key] === undefined) {
         pendingCounter[key] = 0;
+    }
 
     invokeBank[key] = fn;
 
@@ -276,7 +285,9 @@ module._waitFor = function(key, deps, fn) {
         }
     });
 
-    if (!pendingCounter[key]) fn();
+    if (!pendingCounter[key]) {
+        fn();
+    }
 };
 
 module._resolve = function(key) {
