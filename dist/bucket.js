@@ -22,7 +22,7 @@ module.append = function(elem, bottom) {
 
 module.collect = function() {
     this.ls.forEach(function(key) {
-        this.get(key);
+        this.ls.get(key);
     }, this);
 };
 
